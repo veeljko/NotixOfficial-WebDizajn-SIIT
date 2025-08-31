@@ -1,17 +1,21 @@
 import React, { useState } from "react";
 import logo from "../assets/logo.svg";
+import {Link, useLocation} from "react-router-dom";
+import Popup from "./PopUpForm.jsx";
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
-
+    const location = useLocation();
     const navLinks = [
-        { name: "Home", href: "#" },
-        { name: "Login", href: "#" },
-        { name: "Register", href: "#" },
+        { name: "Home", href: "/" },
+        { name: "Login/Register", href: location.pathname },
+        { name: "Accounts", href: "/accounts" },
     ];
 
+    const [isPopupOpen, setIsPopupOpen] = useState(false);
+
     return (
-        <nav className="bg-white shadow-md fixed w-full top-2.5 left-0 z-50">
+        <nav className="bg-white shadow-md w-full pb-2 pt-2">
             <div className="container mx-auto px-4 flex items-center justify-between h-16">
                 {/* Logo and Name */}
                 <div className="flex items-center space-x-2">
@@ -20,19 +24,30 @@ const Navbar = () => {
                         alt="Logo"
                         className="w-20 h-20 rounded-full"
                     />
-                    <span className="font-bold text-xl text-gray-800">Papir&Mastilo</span>
+                    <span className="font-bold text-xl text-gray-800">Papir & Mastilo</span>
                 </div>
 
                 {/* Desktop Menu */}
                 <div className="hidden md:flex space-x-8">
                     {navLinks.map((link) => (
-                        <a
-                            key={link.name}
-                            href={link.href}
-                            className="text-gray-700 hover:text-blue-600 font-medium"
-                        >
-                            {link.name}
-                        </a>
+                        (link.name === "Login/Register" ?
+                            <Link
+                                key={link.name}
+                                to={link.href}
+                                className="text-gray-700 hover:text-blue-600 font-medium"
+                            >
+                                <button onClick={() => setIsPopupOpen(true)}> {link.name}</button>
+                            </Link>
+                        :
+                            <Link
+                                key={link.name}
+                                to={link.href}
+                                className="text-gray-700 hover:text-blue-600 font-medium"
+                            >
+                                {link.name}
+                            </Link>
+                        )
+
                     ))}
                 </div>
 
@@ -70,16 +85,27 @@ const Navbar = () => {
             {isOpen && (
                 <div className="md:hidden bg-white shadow-md">
                     {navLinks.map((link) => (
-                        <a
-                            key={link.name}
-                            href={link.href}
-                            className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
-                        >
-                            {link.name}
-                        </a>
+                        (link.name === "Login/Register" ?
+                                <Link
+                                    key={link.name}
+                                    to={link.href}
+                                    className="text-gray-700 hover:text-blue-600 font-medium"
+                                >
+                                    <button onClick={() => setIsPopupOpen(true)}> {link.name}</button>
+                                </Link>
+                                :
+                                <Link
+                                    key={link.name}
+                                    to={link.href}
+                                    className="text-gray-700 hover:text-blue-600 font-medium"
+                                >
+                                    {link.name}
+                                </Link>
+                        )
                     ))}
                 </div>
             )}
+            <Popup isOpen={isPopupOpen} onClose={() => setIsPopupOpen(false)} />
         </nav>
     );
 };

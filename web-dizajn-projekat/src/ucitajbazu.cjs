@@ -1,56 +1,45 @@
 const admin = require("firebase-admin");
+const fs = require("fs");
+
+// Initialize Firebase Admin SDK
 const serviceAccount = require("./serviceAccountKey.json");
-const jsonData = require("./data2025.json");
 
 admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount)
+    credential: admin.credential.cert(serviceAccount),
 });
 
 const db = admin.firestore();
 
-async function uploadKnjizare() {
-    const collectionRef = db.collection("knjizare");
-    const knjizareObj = jsonData.knjizare;
+// Load your JSON file
+const data = JSON.parse(fs.readFileSync("./data2025.json", "utf8"));
 
-    for (let id in knjizareObj) {
-        const item = knjizareObj[id];
-        await collectionRef.doc(id).set(item); // preserve original ID
+// Function to upload knjizare
+async function uploadData() {
+    // Upload knjizare
+    const knjizareRef = db.collection("knjizare");
+    for (const [id, knjizara] of Object.entries(data.knjizare)) {
+        await knjizareRef.doc(id).set(knjizara);
+        console.log(`Knjizara added: ${knjizara.naziv}`);
     }
 
-    console.log("Knjizare upload complete");
-}
-
-async function uploadKnjige() {
-    const collectionRef = db.collection("knjige");
-    const knjigeObj = jsonData.knjige;
-
-    for (let knjigaId in knjigeObj) {
-        const subObj = knjigeObj[knjigaId];
-
-        // Each subObj may have nested objects
-        for (let subId in subObj) {
-            const item = subObj[subId];
-
-            // Optional: add a reference to parent ID (knjigaId)
-            item.parentId = knjigaId;
-
-            await collectionRef.doc(subId).set(item); // preserve subId as doc ID
+    // Upload knjige
+    const knjigeRef = db.collection("knjige");
+    for (const [id, knjigaGroup] of Object.entries(data.knjige)) {
+        const groupRef = knjigeRef.doc(id).collection("lista");
+        for (const [bookId, bookData] of Object.entries(knjigaGroup)) {
+            await groupRef.doc(bookId).set(bookData);
+            console.log(`Book added: ${bookData.naziv}`);
         }
     }
 
-    console.log("Knjige upload complete");
-}
-
-async function uploadAll() {
-    try {
-        await uploadKnjizare();
-        await uploadKnjige();
-        console.log("All data uploaded successfully!");
-        process.exit(0);
-    } catch (err) {
-        console.error("Error uploading data:", err);
-        process.exit(1);
+    // Upload korisnici
+    const korisniciRef = db.collection("korisnici");
+    for (const [id, korisnik] of Object.entries(data.korisnici)) {
+        await korisniciRef.doc(id).set(korisnik);
+        console.log(`User added: ${korisnik.korisnickoIme}`);
     }
+
+    console.log("✅ All data uploaded successfully!");
 }
 
-uploadAll();
+uploadData().catch(console.error);

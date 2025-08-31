@@ -187,8 +187,8 @@
         "cena": "1198",
         "brojStrana": "619",
         "autor": "Данијел Канеман"
-      },
-
+      }
+    },
       "-LQVniL6Cnotal9vPnuf": {
         "-PPVHHV7DFVBLqWYdowt": {
           "naziv": "Моби Дик",
@@ -744,8 +744,7 @@
           "autor": "Есхил"
         }
       }
-    }
-  },
+    },
   "korisnici": {
     "-MNQo55Aw0tLdwahMZMK": {
       "korisnickoIme": "ana",
