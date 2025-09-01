@@ -83,7 +83,7 @@ const Navbar = () => {
 
             {/* Mobile Dropdown */}
             {isOpen && (
-                <div className="md:hidden bg-white shadow-md">
+                <div className="md:hidden bg-white shadow-md flex flex-col items-end pr-5">
                     {navLinks.map((link) => (
                         (link.name === "Login/Register" ?
                                 <Link
