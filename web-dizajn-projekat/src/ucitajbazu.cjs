@@ -1,45 +1,34 @@
-const admin = require("firebase-admin");
-const fs = require("fs");
+const admin = require('firebase-admin');
+const fs = require('fs');
 
-// Initialize Firebase Admin SDK
-const serviceAccount = require("./serviceAccountKey.json");
+// Initialize Firebase
+const serviceAccount = require('./serviceAccountKey.json');
 
 admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
+    credential: admin.credential.cert(serviceAccount)
 });
 
 const db = admin.firestore();
 
-// Load your JSON file
-const data = JSON.parse(fs.readFileSync("./data2025.json", "utf8"));
+// Load JSON file
+const data = JSON.parse(fs.readFileSync('./data2025.json', 'utf8'));
 
-// Function to upload knjizare
 async function uploadData() {
-    // Upload knjizare
-    const knjizareRef = db.collection("knjizare");
-    for (const [id, knjizara] of Object.entries(data.knjizare)) {
-        await knjizareRef.doc(id).set(knjizara);
-        console.log(`Knjizara added: ${knjizara.naziv}`);
-    }
-
     // Upload knjige
-    const knjigeRef = db.collection("knjige");
-    for (const [id, knjigaGroup] of Object.entries(data.knjige)) {
-        const groupRef = knjigeRef.doc(id).collection("lista");
-        for (const [bookId, bookData] of Object.entries(knjigaGroup)) {
-            await groupRef.doc(bookId).set(bookData);
-            console.log(`Book added: ${bookData.naziv}`);
-        }
+    const knjigeCollection = db.collection('knjige');
+    for (const [id, knjiga] of Object.entries(data.knjige)) {
+        await knjigeCollection.doc(id).set(knjiga);
+        console.log(`Uploaded knjiga ${id}`);
     }
 
-    // Upload korisnici
-    const korisniciRef = db.collection("korisnici");
-    for (const [id, korisnik] of Object.entries(data.korisnici)) {
-        await korisniciRef.doc(id).set(korisnik);
-        console.log(`User added: ${korisnik.korisnickoIme}`);
+    // Upload knjizare
+    const knjizareCollection = db.collection('knjizare');
+    for (const [id, knjizara] of Object.entries(data.knjizare)) {
+        await knjizareCollection.doc(id).set(knjizara);
+        console.log(`Uploaded knjizara ${id}`);
     }
 
-    console.log("✅ All data uploaded successfully!");
+    console.log('All data uploaded successfully!');
 }
 
 uploadData().catch(console.error);

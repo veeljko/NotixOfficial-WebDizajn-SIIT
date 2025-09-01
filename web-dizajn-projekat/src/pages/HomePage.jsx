@@ -1,7 +1,7 @@
 import KnjizaraCard from "../components/KnjizaraCard.jsx";
 import {useEffect, useState} from "react";
 import { collection, getDocs } from "firebase/firestore";
-import { db } from "../../src/firebaseConfig.js";
+import { db } from "../firebaseConfig.js";
 
 function HomePage() {
     const [knjizare, setKnjizare] = useState([]);
@@ -31,7 +31,7 @@ function HomePage() {
                         naziv={knjizara.naziv}
                         adresa={knjizara.adresa}
                         logo={knjizara.logo}
-                        onMoreDetails={null}
+                        id={knjizara.id}
                     />
                 </div>
             ))}
