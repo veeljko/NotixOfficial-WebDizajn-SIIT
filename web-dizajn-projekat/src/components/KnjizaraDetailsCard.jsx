@@ -8,11 +8,28 @@ function KnjizaraDetailsCard({knjizara, knjige}){
             <div className="bg-white shadow-lg rounded-lg p-6 max-w-xl mx-auto">
                 <img src={knjizara.logo} alt={knjizara.name} className="w-full h-60 object-cover rounded" />
                 <h1 className="text-3xl font-bold mt-4">{knjizara.naziv}</h1>
-                <p className="text-gray-600 mt-2">{knjizara.adresa}</p>
-                <p className="mt-2">Godina osnivanja: {knjizara.godinaOsnivanja}.</p>
-                <p className="">Email: {knjizara.email}</p>
-                <p className="">Telefon: {knjizara.kontaktTelefon}</p>
-
+                <div className="flex flex-col pt-3">
+                    <div className="flex mt-2">
+                        <p className="flex justify-baseline">Adresa</p>
+                        <p className="flex justify-end">{knjizara.adresa}</p>
+                    </div>
+                    <hr/>
+                    <div className="flex justify-between mt-2">
+                        <p className="">Godina osnivanja</p>
+                        <p> {knjizara.godinaOsnivanja}.</p>
+                    </div>
+                    <hr/>
+                    <div className="flex justify-between mt-2">
+                        <p className="">Email</p>
+                        <p> {knjizara.email}</p>
+                    </div>
+                    <hr/>
+                    <div className="flex justify-between mt-2">
+                        <p className="">Telefon</p>
+                        <p>{knjizara.kontaktTelefon}</p>
+                    </div>
+                    <hr/>
+                </div>
                 <h2 className="text-xl font-semibold mt-6">Knjige:</h2>
                 {knjige.map(knjiga => (
                     <div key={knjiga.id}>
