@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { doc, getDoc, collection, query, where, getDocs } from "firebase/firestore";
+import { useParams} from "react-router-dom";
+import { doc, getDoc} from "firebase/firestore";
 import { db } from "../firebaseConfig.js";
+import KnjizaraDetailsCard from "../components/KnjizaraDetailsCard.jsx";
 
 function KnjizaraPage() {
     const id = useParams().id;
@@ -57,36 +58,11 @@ function KnjizaraPage() {
     }, [id]);
 
 
-    if (loading) return <p>Loading...</p>;
+    if (loading) return <p className="flex justify-center text-2xl">Loading...</p>;
 
 
     return (
-        <div className="p-6">
-            <div className="bg-white shadow-lg rounded-lg p-6 max-w-xl mx-auto">
-                <img src={knjizara.logo} alt={knjizara.name} className="w-full h-60 object-cover rounded" />
-                <h1 className="text-3xl font-bold mt-4">{knjizara.naziv}</h1>
-                <p className="text-gray-600 mt-2">{knjizara.adresa}</p>
-                <p className="mt-2">Godina osnivanja: {knjizara.godinaOsnivanja}</p>
-                <p className="">Email: {knjizara.email}</p>
-                <p className="">Telefon: {knjizara.kontaktTelefon}</p>
-
-                <h2 className="text-xl font-semibold mt-6">Knjige:</h2>
-                {knjige.map(knjiga => (
-                    <div key={knjiga.id}>
-                        <div className="flex justify-between ">
-                            <span className="">"{knjiga.naziv}" - {knjiga.autor}</span>
-                            <button>Vise Detalja</button>
-                        </div>
-                        <hr/>
-                    </div>
-                ))}
-
-                {/* Edit button */}
-                <button className="mt-6 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">
-                    Uredi Knjizaru
-                </button>
-            </div>
-        </div>
+        <KnjizaraDetailsCard knjizara={knjizara} knjige = {knjige}/>
     );
 }
 
