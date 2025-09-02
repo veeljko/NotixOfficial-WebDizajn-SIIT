@@ -9,9 +9,9 @@ function KnjizaraDetailsCard({knjizara, knjige}){
                 <img src={knjizara.logo} alt={knjizara.name} className="w-full h-60 object-cover rounded" />
                 <h1 className="text-3xl font-bold mt-4">{knjizara.naziv}</h1>
                 <div className="flex flex-col  pt-3">
-                    <div className="flex justify-between items-end-safe mt-2 gap-10">
-                        <p className="flex flex-col justify-end">Adresa</p>
-                        <p className="">{knjizara.adresa}</p>
+                    <div className="flex justify-between gap-x-10">
+                        <p className="text-start flex flex-col justify-end">Adresa</p>
+                        <p className="text-end">{knjizara.adresa}</p>
                     </div>
                     <hr/>
                     <div className="flex justify-between mt-2 gap-4">
