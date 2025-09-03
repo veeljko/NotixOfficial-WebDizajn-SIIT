@@ -8,29 +8,13 @@ function KnjizaraDetailsCard({knjizara, knjige}){
             <div className="bg-white shadow-lg rounded-lg p-6 max-w-xl mx-auto">
                 <img src={knjizara.logo} alt={knjizara.name} className="w-full h-60 object-cover rounded" />
                 <h1 className="text-3xl font-bold mt-4">{knjizara.naziv}</h1>
-                <div className="flex flex-col  pt-3">
-                    <div className="flex justify-between gap-x-10">
-                        <p className="text-start flex flex-col justify-end">Adresa</p>
-                        <p className="text-end">{knjizara.adresa}</p>
-                    </div>
-                    <hr/>
-                    <div className="flex justify-between mt-2 gap-4">
-                        <p className="">Godina osnivanja</p>
-                        <p className=""> {knjizara.godinaOsnivanja}.</p>
-                    </div>
-                    <hr/>
-                    <div className="flex justify-between mt-2 gap-4">
-                        <p className="">Email</p>
-                        <p className=""> {knjizara.email}</p>
-                    </div>
-                    <hr/>
-                    <div className="flex justify-between mt-2 gap-4">
-                        <p className="">Telefon</p>
-                        <p className="">{knjizara.kontaktTelefon}</p>
-                    </div>
-                    <hr/>
+                <div className="flex flex-col  pt-1">
+                        <p className="text-start flex flex-col justify-end">{knjizara.adresa}</p>
+                        <p className="text-gray-600">Godina osnivanja: {knjizara.godinaOsnivanja}.</p>
+                        <p className="text-gray-600">Email: {knjizara.email}</p>
+                        <p className="text-gray-600">Telefon: {knjizara.kontaktTelefon}</p>
                 </div>
-                <h2 className="text-xl font-semibold mt-6 pb-3">Knjige:</h2>
+                <h2 className="text-xl font-semibold mt-6">Knjige:</h2>
                 {knjige.map(knjiga => (
                     <div key={knjiga.id}>
                         <div className="flex justify-between">

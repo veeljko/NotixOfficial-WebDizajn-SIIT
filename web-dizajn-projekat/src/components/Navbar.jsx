@@ -10,6 +10,7 @@ const Navbar = () => {
         { name: "Home", href: "/" },
         { name: "Login/Register", href: location.pathname },
         { name: "Accounts", href: "/accounts" },
+        { name: "Admin Knjizara", href: "/adminknjizara" },
     ];
 
     const [isPopupOpen, setIsPopupOpen] = useState(false);

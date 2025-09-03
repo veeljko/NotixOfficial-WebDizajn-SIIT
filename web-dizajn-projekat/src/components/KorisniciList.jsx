@@ -43,7 +43,7 @@ function KorisniciList({isEditable, setIsEditable, setEditAccount}) {
                     </thead>
                     <tbody>
                     {users.map(user => (
-                        <tr key={user.id} className="border-t hover:bg-gray-50 transition-colors">
+                        <tr key={user.id} className="border-t hover:bg-gray-100 transition-colors">
                             <td className="px-6 py-2">{user.ime}</td>
                             <td className="px-6 py-2">{user.prezime}</td>
                             <td className="px-6 py-2">{user.korisnickoIme}</td>

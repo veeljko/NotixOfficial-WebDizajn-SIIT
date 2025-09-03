@@ -4,6 +4,7 @@ import HomePage from "../pages/HomePage.jsx";
 import AdminAccountsPage from "../pages/AdminAccountsPage.jsx";
 import KnjizaraPage from "../pages/KnjizaraPage.jsx";
 import KnjigaPage from "../pages/KnjigaPage.jsx";
+import AdminKnjizaraPage from "../pages/AdminKnjizaraPage.jsx";
 
 const router = createBrowserRouter([
     {
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
             {
                 path: '/knjiga/:id',
                 element: <KnjigaPage/>
+            },
+            {
+                path: '/adminknjizara',
+                element: <AdminKnjizaraPage/>
             }
         ]
     }
