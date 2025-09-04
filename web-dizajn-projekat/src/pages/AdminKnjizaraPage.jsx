@@ -10,8 +10,11 @@ import {
     doc,
 } from "firebase/firestore";
 import AdminKnjizaraCard from "../components/AdminKnjizaraCard.jsx";
+import KnjizaraEditCard from "../components/KnjizaraEditCard.jsx";
 
 export default function AdminKnjizarePage() {
+    const [knjizara, setKnjizara] = useState({});
+    const [isEditable, setIsEditable] = useState(false);
     const [knjizare, setKnjizare] = useState([]);
     const [newKnjizara, setNewKnjizara] = useState({
         naziv: "",
@@ -33,6 +36,7 @@ export default function AdminKnjizarePage() {
 
 
     return (<>
-        <AdminKnjizaraCard knjizare={knjizare} />
+        <AdminKnjizaraCard knjizare={knjizare} setKnjizara={setKnjizara} setEditable={setIsEditable} />
+        {isEditable && <KnjizaraEditCard knjizara={knjizara} setEditable={setIsEditable} />}
     </>);
 }

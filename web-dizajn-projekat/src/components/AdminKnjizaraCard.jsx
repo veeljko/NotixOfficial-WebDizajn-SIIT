@@ -1,15 +1,23 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
+import {doc, getDoc} from "firebase/firestore";
+import {db} from "../firebaseConfig.js";
 
 
-function AdminKnjizaraCard({knjizare}) {
+function AdminKnjizaraCard({knjizare, setKnjizara, setEditable}) {
+    const id = knjizare.id;
 
-    const handleAdd = async () => {
+    const handleAdd = () => {
 
     };
 
     // Edit Knjizara
-    const handleEdit = async (id, updatedData) => {
-
+    const handleEdit = (k) => {
+        setKnjizara((prev) => ({
+            ...prev,
+            ...k, // overwrite with new values
+            id: k.id, // ensure id is correct
+        }));
+        setEditable(prev => (!prev));
     };
 
     // Delete Knjizara
@@ -18,7 +26,7 @@ function AdminKnjizaraCard({knjizare}) {
     };
 
     return (
-        <div className="p-6">
+        <div className="p-6 ">
 
             {/* Display Knjizare */}
             {knjizare.map((k) => (
@@ -42,7 +50,7 @@ function AdminKnjizaraCard({knjizare}) {
                     <div className="flex gap-x-2 md:justify-end w-full flex-wrap justify-center">
                         <button
                             className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
-                            // onClick={}
+                            onClick={() => handleEdit(k)}
                         >
                             Edit
                         </button>

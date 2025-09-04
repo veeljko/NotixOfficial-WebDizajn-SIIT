@@ -96,10 +96,10 @@ function KorisnikEdit({setIsEditable, editAccount, setEditAccount}) {
     return (
         <div className="p-4 sm:p-10 md:p-20 fixed inset-0 flex items-center justify-center bg-gray-900/80 z-20">
             <div className="bg-white rounded-2xl shadow-lg w-full max-w-md h-auto p-5 relative overflow-y-auto max-h-[90vh]">
-                <h1 className="text-2xl font-bold mb-4">Izmeni korisnika</h1>
+                {/*<h1 className="text-2xl font-bold mb-4">Izmeni korisnika</h1>*/}
                 <button
                     onClick={handleOnClose}
-                    className="absolute top-6 right-3 text-gray-500 hover:text-gray-800"
+                    className="absolute top-1 right-3 text-gray-500 hover:text-gray-800"
                 >
                     ✕
                 </button>

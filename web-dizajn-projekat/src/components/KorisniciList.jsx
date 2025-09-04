@@ -61,15 +61,8 @@ function KorisniciList({isEditable, setIsEditable, setEditAccount}) {
                                             setIsEditable(true);
                                             setEditAccount((prev) => ({
                                                 ...prev,
-                                                ime: user.ime,
-                                                prezime: user.prezime,
-                                                korisnickoIme: user.korisnickoIme,
-                                                adresa: user.adresa,
-                                                datumRodjenja: user.datumRodjenja,
-                                                email: user.email,
-                                                telefon: user.telefon,
-                                                zanimanje: user.zanimanje,
-                                                lozinka: user.lozinka
+                                                ...user,
+                                                id: user.id
                                             }));
                                         }}
                                     >
