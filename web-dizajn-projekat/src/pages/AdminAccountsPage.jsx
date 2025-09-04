@@ -9,7 +9,7 @@ function AdminAccountsPage() {
 
     return (<>
         <KorisniciList isEditable={isEditable} setIsEditable={setIsEditable} setEditAccount={setEditAccount} />
-        {isEditable && <KorisnikEdit setIsEditable={setIsEditable} editAccount={editAccount} setEditAccount={setEditAccount} />}
+        {isEditable && <KorisnikEdit setIsEditable={setIsEditable} editAccount={editAccount} setEditAccount={setEditAccount}/>}
     </>)
 }
 

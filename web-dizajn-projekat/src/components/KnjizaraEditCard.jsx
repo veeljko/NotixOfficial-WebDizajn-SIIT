@@ -64,7 +64,7 @@ function KnjizaraEditCard({knjizara, setEditable}) {
 
     return (
         <div className="fixed inset-0 bg-gray-900/80 flex justify-center pt-10 pb-10 overflow-y-auto ">
-            <div className="bg-white px-5 pb-3 rounded-lg w-11/12 max-w-md overflow-y-auto">
+            <div className="bg-white px-5 pb-3 rounded-lg w-11/12 max-w-md overflow-y-auto h-auto self-start">
                 <div className="flex justify-between">
                     <h2 className="text-xl font-bold mb-4 pt-5">Izmena informacija o knjizari</h2>
                     <button
@@ -130,43 +130,23 @@ function KnjizaraEditCard({knjizara, setEditable}) {
                     className="hidden"
                     // onChange={handleLogoChange}
                 />
-
-                <h2 className="text-xl font-semibold mt-6 pb-2">Knjige:</h2>
-                {knjige.map(knjiga => (
-                    <div key={knjiga.id}>
-                        <div className="flex justify-between gap-x-10">
-                            <span
-                                className="flex-wrap flex flex-col justify-center">"{knjiga.naziv}" - {knjiga.autor}</span>
-                            <div className="flex gap-3 justify-center">
-                                <button
-                                    className="mt-2.5 mb-2.5 bg-red-500 text-white px-3 py-1 text-sm rounded hover:bg-red-600">
-                                    Delete
-                                </button>
+                <div className="mt-3">
+                    {knjige.map(knjiga => (
+                        <div key={knjiga.id} className="">
+                            <div className="flex justify-between gap-x-5 bg-white">
+                                    <span
+                                        className="flex-wrap flex flex-col justify-center">"{knjiga.naziv}" - {knjiga.autor}</span>
+                                <div className="flex flex-col justify-center">
+                                    <button
+                                        className="max-h-[30px] mt-2.5 mb-2.5 bg-red-500 text-white px-3 py-1 text-sm rounded hover:bg-red-600">
+                                        Delete
+                                    </button>
+                                </div>
                             </div>
+                            <hr/>
+
                         </div>
-                        <hr/>
-                    </div>
-                ))}
-
-                <DodajKnjigu/>
-
-                 {/*Buttons*/}
-                <div className="flex justify-end gap-2 pt-7">
-                    <button
-                        className="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400"
-                        onClick={() => setEditable(prev => !prev)}
-                    >
-                        Ponisti
-                    </button>
-                    <button
-                        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                        // onClick={() => {
-                        //     handleEdit(editingKnjizara.id, editingKnjizara);
-                        //     setEditingKnjizara(null);
-                        // }}
-                    >
-                        Sacuvaj promene
-                    </button>
+                    ))}
                 </div>
             </div>
         </div>

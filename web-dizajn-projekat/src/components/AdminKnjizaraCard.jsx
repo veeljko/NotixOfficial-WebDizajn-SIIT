@@ -3,7 +3,7 @@ import {doc, getDoc} from "firebase/firestore";
 import {db} from "../firebaseConfig.js";
 
 
-function AdminKnjizaraCard({knjizare, setKnjizara, setEditable}) {
+function AdminKnjizaraCard({knjizare, setKnjizara, setEditable, setIsKnjigaEditable}) {
     const id = knjizare.id;
 
     const handleAdd = () => {
@@ -46,20 +46,27 @@ function AdminKnjizaraCard({knjizare, setKnjizara, setEditable}) {
                             <p className="text-gray-600">Godina osnivanja: {k.godinaOsnivanja}.</p>
                         </div>
                     </div>
-
-                    <div className="flex gap-x-2 md:justify-end w-full flex-wrap justify-center">
-                        <button
-                            className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
-                            onClick={() => handleEdit(k)}
-                        >
-                            Edit
-                        </button>
-                        <button
-                            className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
-                            // onClick={}
-                        >
-                            Delete
-                        </button>
+                    <div className="flex justify-center md:justify-end w-full ">
+                        <div className="flex flex-row md:flex-col gap-x-2 md:gap-y-2 flex-wrap justify-center">
+                            <button
+                                className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 md:max-w-[100px]"
+                                onClick={() => handleEdit(k)}
+                            >
+                                Edit
+                            </button>
+                            <button
+                                className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 md:max-w-[100px]"
+                                // onClick={}
+                            >
+                                Delete
+                            </button>
+                            <button
+                                className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 md:max-w-[100px]"
+                                onClick={() => setIsKnjigaEditable(prev => !prev)}
+                            >
+                                Edit Knjige
+                            </button>
+                        </div>
                     </div>
                 </div>
             ))}

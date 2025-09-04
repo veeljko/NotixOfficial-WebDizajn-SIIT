@@ -11,8 +11,10 @@ import {
 } from "firebase/firestore";
 import AdminKnjizaraCard from "../components/AdminKnjizaraCard.jsx";
 import KnjizaraEditCard from "../components/KnjizaraEditCard.jsx";
+import KnjizaraEditKnjige from "../components/KnjizaraEditKnjige.jsx";
 
 export default function AdminKnjizarePage() {
+    const [isKnjigaEditable, setIsKnjigaEditable] = useState(false);
     const [knjizara, setKnjizara] = useState({});
     const [isEditable, setIsEditable] = useState(false);
     const [knjizare, setKnjizare] = useState([]);
@@ -36,7 +38,8 @@ export default function AdminKnjizarePage() {
 
 
     return (<>
-        <AdminKnjizaraCard knjizare={knjizare} setKnjizara={setKnjizara} setEditable={setIsEditable} />
-        {isEditable && <KnjizaraEditCard knjizara={knjizara} setEditable={setIsEditable} />}
+        <AdminKnjizaraCard knjizare={knjizare} setKnjizara={setKnjizara} setEditable={setIsEditable} setIsKnjigaEditable={setIsKnjigaEditable} />
+        {isEditable && <KnjizaraEditCard knjizara={knjizara} setEditable={setIsEditable}/>}
+        {isKnjigaEditable && <KnjizaraEditKnjige knjizara = {knjizara} setIsKnjigaEditable={setIsKnjigaEditable}/>}
     </>);
 }
