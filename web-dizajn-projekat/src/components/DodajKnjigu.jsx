@@ -1,12 +1,15 @@
 import ImageUploader from "./ImageUploader.jsx";
 import React, {useState} from "react";
 import {knjigaValidation} from "../validation/KnjigaValidation.js";
+import {doc, updateDoc} from "firebase/firestore";
+import {db} from "../firebaseConfig.js";
 
-function DodajKnjigu({setIsKnjigaEditable}){
+function DodajKnjigu({setIsKnjigaEditable, knjizara}){
     const [newKnjiga, setNewKnjiga] = useState({
         naziv: "",
         autor: "",
-        zanr: "Zanr",
+        zanr: "",
+        format: "Format",
         brojStrana: "",
         cena: "",
         opis: "",
@@ -33,15 +36,52 @@ function DodajKnjigu({setIsKnjigaEditable}){
     function handleChangeOpis(e){
         setNewKnjiga((prev) => ({...prev, opis: e.target.value}));
     }
+    function handleChangeFormat(e){
+        setNewKnjiga((prev) => ({...prev, format: e.target.value}));
+    }
+
+
+    async function addBookToBooksDoc(docId, bookData) {
+        try {
+            const booksRef = doc(db, "knjige", docId);
+
+            // generate a new unique key for the book
+            const bookId = crypto.randomUUID?.() ?? String(Date.now() + Math.random());
+
+            // update the document by adding a new book field
+            await updateDoc(booksRef, {
+                [bookId]: bookData
+            });
+
+            console.log("Book added successfully:", bookId);
+        } catch (error) {
+            console.error("Error adding book:", error);
+        }
+    }
+
     function handleSave(e){
         const output = knjigaValidation(newKnjiga);
         setOutputMessage(output);
         if (output === "Uspesno dodata knjiga!"){
+            console.log(newKnjiga);
+            addBookToBooksDoc(knjizara.knjige, {
+                autor: newKnjiga.autor,
+                brojStrana: newKnjiga.brojStrana,
+                cena: newKnjiga.cena,
+                format: newKnjiga.format,
+                naziv: newKnjiga.naziv,
+                opis: newKnjiga.opis,
+                zanr: newKnjiga.zanr,
+                slike: null
+            })
+
+
             setNewKnjiga((prev) => ({
                 ...prev,
                 naziv: "",
                 autor: "",
-                zanr: "Zanr",
+                format: "Format",
+                zanr: "",
                 brojStrana: "",
                 cena: "",
                 opis: "",
@@ -50,7 +90,6 @@ function DodajKnjigu({setIsKnjigaEditable}){
             setFlag(prev => !prev);
         }
     }
-
 
 
     return (<>
@@ -84,9 +123,9 @@ function DodajKnjigu({setIsKnjigaEditable}){
             />
             <div className="flex sm:justify-between sm:gap-2 sm:flex-wrap sm:flex-row flex-col w-auto">
                 <select name="format" id="format" className="border p-1 mb-3 rounded"
-                onChange={(e) => handleChangeZanr(e)}
-                value={newKnjiga.zanr}>
-                    <option value="meki-povez">Zanr</option>
+                onChange={(e) => handleChangeFormat(e)}
+                value={newKnjiga.format}>
+                    <option value="meki-povez">Format</option>
                     <option value="meki-povez">Meki povez</option>
                     <option value="tvrdi-povez">Tvrdi povez</option>
                     <option value="e-knjiga">E-knjiga</option>
@@ -111,7 +150,14 @@ function DodajKnjigu({setIsKnjigaEditable}){
                     placeholder="Cena"
                 />
             </div>
-
+            <input
+                type="zanr"
+                className="border p-1 mb-3 rounded"
+                name="zanr"
+                value={newKnjiga.zanr}
+                onChange={(e) => handleChangeZanr(e)}
+                placeholder="Zanr"
+            />
 
             <textarea
                 type="text"

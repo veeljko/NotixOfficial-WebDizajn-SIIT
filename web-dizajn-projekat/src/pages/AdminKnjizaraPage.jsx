@@ -4,6 +4,7 @@ import { db } from "../firebaseConfig.js";
 import {
     collection,
     getDocs,
+    onSnapshot,
     addDoc,
     updateDoc,
     deleteDoc,
@@ -24,21 +25,21 @@ export default function AdminKnjizarePage() {
         adresa: "",
     });
 
-    const knjizareRef = collection(db, "knjizare");
-
-    // Fetch all Knjizare
-    const loadKnjizare = async () => {
-        const snapshot = await getDocs(knjizareRef);
-        setKnjizare(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-    };
-
     useEffect(() => {
-        loadKnjizare();
+        const knjizareRef = collection(db, "knjizare");
+
+        // Subscribe to real-time updates
+        const unsubscribe = onSnapshot(knjizareRef, (snapshot) => {
+            setKnjizare(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+        });
+
+        // Cleanup listener when component unmounts
+        return () => unsubscribe();
     }, []);
 
 
     return (<>
-        <AdminKnjizaraCard knjizare={knjizare} setKnjizara={setKnjizara} setEditable={setIsEditable} setIsKnjigaEditable={setIsKnjigaEditable} />
+        <AdminKnjizaraCard knjizare={knjizare} knjizara={knjizara} setKnjizara={setKnjizara} setEditable={setIsEditable} setIsKnjigaEditable={setIsKnjigaEditable} />
         {isEditable && <KnjizaraEditCard knjizara={knjizara} setEditable={setIsEditable} setKnjizara={setKnjizara}/>}
         {isKnjigaEditable && <KnjizaraEditKnjige knjizara = {knjizara} setIsKnjigaEditable={setIsKnjigaEditable}/>}
     </>);

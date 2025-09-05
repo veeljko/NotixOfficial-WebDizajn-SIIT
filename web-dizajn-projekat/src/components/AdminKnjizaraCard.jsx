@@ -1,15 +1,12 @@
 import React, {useEffect, useState} from "react";
-import {doc, getDoc} from "firebase/firestore";
+import {deleteDoc, doc} from "firebase/firestore";
 import {db} from "../firebaseConfig.js";
 import Confirm from "./Confirm.jsx";
+import KnjizaraEditKnjige from "./KnjizaraEditKnjige.jsx";
 
 
-function AdminKnjizaraCard({knjizare, setKnjizara, setEditable, setIsKnjigaEditable}) {
+function AdminKnjizaraCard({knjizare, knjizara, setKnjizara, setEditable, setIsKnjigaEditable, isKnjigaEditable}) {
     const id = knjizare.id;
-
-    const handleAdd = () => {
-
-    };
 
     // Edit Knjizara
     const handleEdit = (k) => {
@@ -22,20 +19,29 @@ function AdminKnjizaraCard({knjizare, setKnjizara, setEditable, setIsKnjigaEdita
     };
 
     const [confirmOpen, setConfirmOpen] = useState(false);
-    const [selectedKnjizara, setSelectedKnjizara] = useState(null);
 
+    async function deleteKnjizara(knjizaraId) {
+        try {
+            await deleteDoc(doc(db, "knjizare", knjizaraId));
+            console.log("Knjizara deleted successfully!");
+        } catch (error) {
+            console.error("Error deleting knjizara:", error);
+        }
+    }
 
     const handleConfirm = () => {
         setConfirmOpen(false);
+        //brisanje knjizare
+        deleteKnjizara(knjizara.id);
     };
 
     const handleCancel = () => {
-        setSelectedKnjizara(null);
+        setKnjizara(null);
         setConfirmOpen(false);
     };
 
     const handleDeleteKnjizara = (knjizara) => {
-        setSelectedKnjizara((prev) => ({ ...prev, ...knjizara}));
+        setKnjizara((prev) => ({ ...prev, ...knjizara}));
         setConfirmOpen(true);
     }
 
@@ -76,7 +82,11 @@ function AdminKnjizaraCard({knjizare, setKnjizara, setEditable, setIsKnjigaEdita
                             </button>
                             <button
                                 className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 md:max-w-[120px]"
-                                onClick={() => setIsKnjigaEditable(prev => !prev)}
+                                onClick={() => {
+                                    setIsKnjigaEditable(prev => !prev);
+                                    setKnjizara((prev) => ({ ...prev, ...k}));
+                                }
+                            }
                             >
                                 Dodaj knjigu
                             </button>
@@ -88,10 +98,11 @@ function AdminKnjizaraCard({knjizare, setKnjizara, setEditable, setIsKnjigaEdita
             <Confirm
                 isOpen={confirmOpen}
                 title="Potvrda brisanja"
-                message={`Da li ste sigurni da želite da obrišete knjizaru ${selectedKnjizara == null ? "" : selectedKnjizara.naziv}`}
+                message={`Da li ste sigurni da želite da obrišete knjizaru ${knjizara == null ? "" : knjizara.naziv}`}
                 onConfirm={handleConfirm}
                 onCancel={handleCancel}
             />
+
         </div>
     );
 }

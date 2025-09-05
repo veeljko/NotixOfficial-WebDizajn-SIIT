@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {doc, getDoc} from "firebase/firestore";
+import {doc, getDoc, updateDoc, deleteField, onSnapshot} from "firebase/firestore";
 import {db} from "../firebaseConfig.js";
 import {knjizaraValidation} from "../validation/KnjizaraValidation.js";
 import Confirm from "./Confirm.jsx";
@@ -11,50 +11,57 @@ function KnjizaraEditCard({knjizara, setEditable, setKnjizara}) {
     const id = knjizara.id;
 
     useEffect(() => {
-        console.log(knjizara.ime)
-        const fetchData = async () => {
-            try {
-                const knjizaraRef = doc(db, "knjizare", id);
-                const knjizaraSnap = await getDoc(knjizaraRef);
+        if (!id) return;
 
-                if (!knjizaraSnap.exists()) {
-                    console.log("Knjizara not found");
-                    return;
-                }
-                const knjizaraData = { id: knjizaraSnap.id, ...knjizaraSnap.data() };
-                const knjigeField = knjizaraData.knjige;
+        // Reference to the Knjizara document
+        const knjizaraRef = doc(db, "knjizare", id);
 
-                //console.log(knjigeField);
-                const knjigeRef = doc(db, "knjige", knjigeField);
-                const knjigeSnap = await getDoc(knjigeRef);
+        // Real-time listener for the Knjizara document
+        const unsubscribe = onSnapshot(knjizaraRef, async (knjizaraSnap) => {
+            if (!knjizaraSnap.exists()) {
+                console.log("Knjizara not found");
+                setKnjige([]);
+                setLoading(false);
+                return;
+            }
 
+            const knjizaraData = { id: knjizaraSnap.id, ...knjizaraSnap.data() };
+            const knjigeField = knjizaraData.knjige;
+
+            if (!knjigeField) {
+                console.log("No 'knjige' field yet");
+                setKnjige([]);
+                setLoading(false);
+                return;
+            }
+
+            // Reference to the Knjige document
+            const knjigeRef = doc(db, "knjige", knjigeField);
+
+            // Real-time listener for Knjige
+            const unsubscribeKnjige = onSnapshot(knjigeRef, (knjigeSnap) => {
                 if (!knjigeSnap.exists()) {
                     console.log("Knjige not found");
+                    setKnjige([]);
+                    setLoading(false);
                     return;
                 }
-                // Convert to array with IDs included
+
                 const knjigeList = Object.entries(knjigeSnap.data()).map(([id, data]) => ({
-                    id,   // preserve the document ID
-                    ...data
+                    id,
+                    ...data,
                 }));
 
-                // knjigeList.forEach((knjige) => {
-                //     console.log(knjige.naziv);
-                // });
                 setKnjige(knjigeList);
-
-            } catch (error) {
-                console.error("Error fetching data:", error);
-                setKnjige([]);
-            } finally {
                 setLoading(false);
-            }
-        };
+            });
 
+            // Cleanup Knjige listener when Knjizara changes
+            return () => unsubscribeKnjige();
+        });
 
-
-        fetchData();
-
+        // Cleanup Knjizara listener
+        return () => unsubscribe();
     }, [id]);
 
 
@@ -62,18 +69,54 @@ function KnjizaraEditCard({knjizara, setEditable, setKnjizara}) {
         setEditable(prev => !prev);
     }
 
+    async function updateKnjizara(knjizaraId, updatedData) {
+        try {
+            const knjizaraRef = doc(db, "knjizare", knjizaraId);
+            await updateDoc(knjizaraRef, updatedData);
+            console.log("Knjizara updated successfully!");
+        } catch (error) {
+            console.error("Error updating knjizara:", error);
+        }
+    }
+
     const handleSubmit = () => {
         // console.log(knjizara);
         const output = knjizaraValidation(knjizara);
         setOutputMessage(output);
+        if (output === "Podaci sacuvani!"){
+            updateKnjizara(knjizara.id, {
+                adresa: knjizara.adresa,
+                email: knjizara.email,
+                godinaOsnivanja: knjizara.godinaOsnivanja,
+                knjige: knjizara.knjige,
+                kontaktTelefon: knjizara.kontaktTelefon,
+                logo: knjizara.logo,
+                naziv: knjizara.naziv
+            })
+        }
     }
 
     const [confirmOpen, setConfirmOpen] = useState(false);
     const [selectedKnjiga, setSelectedKnjiga] = useState(null);
 
+    async function removeBook(booksDocId, bookId) {
+        try {
+            const booksRef = doc(db, "knjige", booksDocId);
+
+            await updateDoc(booksRef, {
+                [bookId]: deleteField() // removes this book from the document
+            });
+
+            console.log("Book removed:", bookId);
+        } catch (error) {
+            console.error("Error removing book:", error);
+        }
+    }
 
     const handleConfirm = () => {
         setConfirmOpen(false);
+        console.log(knjizara.naziv + " " + selectedKnjiga.naziv);
+        removeBook(knjizara.knjige, selectedKnjiga.id);
     };
 
     const handleCancel = () => {
