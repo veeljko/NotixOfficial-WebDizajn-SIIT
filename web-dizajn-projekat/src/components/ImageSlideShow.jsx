@@ -3,6 +3,7 @@ import leftArrow from "../assets/left-arrow.svg";
 import rightArrow from "../assets/right-arrow.svg";
 
 function ImageSlideShow({ images }) {
+    if (images === null) images = ["https://placehold.co/400x400"];
     const [nextIndex, setNextIndex] = useState(0);
     const arrayLength = images.length;
 
