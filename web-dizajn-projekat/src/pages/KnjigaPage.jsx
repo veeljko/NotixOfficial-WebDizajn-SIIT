@@ -1,48 +1,35 @@
-import {useParams} from "react-router-dom";
+import {useLocation, useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
-import {collection, doc, getDoc, getDocs} from "firebase/firestore";
+import {doc, getDoc} from "firebase/firestore";
 import {db} from "../firebaseConfig.js";
-import ImageSlideShow from "../components/ImageSlideShow.jsx";
 import KnjigaDetailsCard from "../components/KnjigaDetailsCard.jsx";
 
 
 function KnjigaPage() {
-    const knjigaId = useParams().id;
-    const [knjiga, setKnjiga] = useState(null);
-
+    const { id } = useParams();
+    const location = useLocation();
+    const [knjiga, setKnjiga] = useState(location.state?.knjiga || null);
 
     useEffect(() => {
         const fetchKnjiga = async () => {
             try {
-                const querySnapshot = await getDocs(collection(db, "knjige"));
-                let foundKnjiga = null;
+                const docRef = doc(db, "knjige", id);
+                const docSnap = await getDoc(docRef);
 
-                querySnapshot.forEach(doc => {
-                    const knjigeList = Object.entries(doc.data()).map(([id, data]) => ({
-                        id,   // preserve the document ID
-                        ...data
-                    }));
-                    for (const k of knjigeList) {
-                        if (k.id === knjigaId){
-                            foundKnjiga = k;
-                            break;
-                        }
-                    }
-                });
-                //console.log(foundKnjiga);
-
-                if (foundKnjiga) {
-                    setKnjiga(foundKnjiga);
+                if (docSnap.exists()) {
+                    setKnjiga({ id: docSnap.id, ...docSnap.data() });
                 } else {
-                    console.log("Knjiga not found");
+                    console.log("Knjiga not found in Firestore");
                 }
             } catch (error) {
-                console.error("Error fetching knjige:", error);
+                console.error("Error fetching knjiga:", error);
             }
         };
 
-        fetchKnjiga();
-    }, []);
+        if (!knjiga) {
+            fetchKnjiga();
+        }
+    }, [id, knjiga]);
 
     if (!knjiga) {
         return <p className="text-gray-500">Učitavanje...</p>;

@@ -6,21 +6,16 @@ import { db } from "../firebaseConfig.js";
 function HomePage() {
     const [knjizare, setKnjizare] = useState([]);
 
-    useEffect(() => {
-        const fetchKnjizare = async () => {
-            try {
-                const querySnapshot = await getDocs(collection(db, "knjizare"));
-                const knjizareData = querySnapshot.docs.map(doc => ({
-                    id: doc.id,
-                    ...doc.data()
-                }));
-                setKnjizare(knjizareData);
-            } catch (error) {
-                console.error("Error fetching data:", error);
-            }
-        };
+    const knjizareRef = collection(db, "knjizare");
 
-        fetchKnjizare();
+    // Fetch all Knjizare
+    const loadKnjizare = async () => {
+        const snapshot = await getDocs(knjizareRef);
+        setKnjizare(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    };
+
+    useEffect(() => {
+        loadKnjizare();
     }, []);
 
     return (<div className="grid grid-cols-[repeat(auto-fit,minmax(250px,2fr))] gap-8 p-8">

@@ -26,7 +26,7 @@ function ImageSlideShow({images}) {
             <div className="flex justify-center gap-5">
                 <img onClick={handleBackClick} src={leftArrow} alt="back arrow" style={{width: 25}}></img>
                 <div className="">
-                    <img src={images[nextIndex]} alt="Nick" className="w-50 h-75"></img>
+                    <img src={images[nextIndex]} alt="Nick" className="w-50 h-75" loading="lazy"></img>
                 </div>
                 <img onClick={handleForwardClick} src={rightArrow} alt="back arrow" style={{width: 25}}></img>
             </div>

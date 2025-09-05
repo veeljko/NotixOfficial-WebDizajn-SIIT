@@ -10,20 +10,9 @@ function KnjizaraEditKnjige({knjizara, setIsKnjigaEditable}) {
     const id = knjizara.id;
 
     useEffect(() => {
-        console.log(knjizara.ime)
         const fetchData = async () => {
             try {
-                const knjizaraRef = doc(db, "knjizare", id);
-                const knjizaraSnap = await getDoc(knjizaraRef);
-
-                if (!knjizaraSnap.exists()) {
-                    console.log("Knjizara not found");
-                    return;
-                }
-                const knjizaraData = { id: knjizaraSnap.id, ...knjizaraSnap.data() };
-                const knjigeField = knjizaraData.knjige;
-
-                //console.log(knjigeField);
+                const knjigeField = knjizara.knjige;
                 const knjigeRef = doc(db, "knjige", knjigeField);
                 const knjigeSnap = await getDoc(knjigeRef);
 
@@ -31,17 +20,13 @@ function KnjizaraEditKnjige({knjizara, setIsKnjigaEditable}) {
                     console.log("Knjige not found");
                     return;
                 }
-                // Convert to array with IDs included
+
                 const knjigeList = Object.entries(knjigeSnap.data()).map(([id, data]) => ({
-                    id,   // preserve the document ID
-                    ...data
+                    id,
+                    ...data,
                 }));
 
-                // knjigeList.forEach((knjige) => {
-                //     console.log(knjige.naziv);
-                // });
                 setKnjige(knjigeList);
-
             } catch (error) {
                 console.error("Error fetching data:", error);
                 setKnjige([]);
@@ -50,11 +35,8 @@ function KnjizaraEditKnjige({knjizara, setIsKnjigaEditable}) {
             }
         };
 
-
-
         fetchData();
-
-    }, [id]);
+    }, [knjizara]);
 
 
     return (<div className="fixed inset-0 bg-gray-900/80 flex justify-center pt-10 overflow-y-auto">

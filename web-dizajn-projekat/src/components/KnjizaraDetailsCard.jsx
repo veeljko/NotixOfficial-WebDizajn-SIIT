@@ -20,7 +20,10 @@ function KnjizaraDetailsCard({knjizara, knjige}){
                         <div className="flex justify-between">
                             <span className="basis-3/5 flex flex-col justify-end">"{knjiga.naziv}" - {knjiga.autor}</span>
                             <div className="w-auto h-auto flex flex-col justify-center">
-                                <button className="my-1.5 py-1.5 px-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors" onClick={() => navigate(`/knjiga/${knjiga.id}`)}>Vise Detalja</button>
+                                <button className="my-1.5 py-1.5 px-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors"
+                                onClick={() => navigate(`/knjiga/${knjiga.id}`, {state : {knjiga}})}>
+                                    Vise Detalja
+                                </button>
                             </div>
                         </div>
                         <hr/>
