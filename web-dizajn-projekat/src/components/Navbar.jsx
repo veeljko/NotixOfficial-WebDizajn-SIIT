@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import logo from "../assets/logo.svg";
 import {Link, useLocation} from "react-router-dom";
-import Popup from "./PopUpForm.jsx";
+import Popup from "./LoginRegister.jsx";
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
