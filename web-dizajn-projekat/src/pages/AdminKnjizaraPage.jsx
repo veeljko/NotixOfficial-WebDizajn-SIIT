@@ -39,7 +39,7 @@ export default function AdminKnjizarePage() {
 
     return (<>
         <AdminKnjizaraCard knjizare={knjizare} setKnjizara={setKnjizara} setEditable={setIsEditable} setIsKnjigaEditable={setIsKnjigaEditable} />
-        {isEditable && <KnjizaraEditCard knjizara={knjizara} setEditable={setIsEditable}/>}
+        {isEditable && <KnjizaraEditCard knjizara={knjizara} setEditable={setIsEditable} setKnjizara={setKnjizara}/>}
         {isKnjigaEditable && <KnjizaraEditKnjige knjizara = {knjizara} setIsKnjigaEditable={setIsKnjigaEditable}/>}
     </>);
 }

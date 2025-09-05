@@ -20,7 +20,7 @@ function HomePage() {
 
     return (<div className="grid grid-cols-[repeat(auto-fit,minmax(250px,2fr))] gap-8 p-8">
             {knjizare.map(knjizara => (
-                <div className="flex justify-center">
+                <div className="flex justify-center" key={knjizara.id}>
                     <KnjizaraCard
                         key={knjizara.id}
                         naziv={knjizara.naziv}

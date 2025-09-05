@@ -1,13 +1,13 @@
 import React, {useEffect, useState} from "react";
 import {doc, getDoc} from "firebase/firestore";
 import {db} from "../firebaseConfig.js";
-import DodajKnjigu from "./DodajKnjigu.jsx";
+import {knjizaraValidation} from "../validation/KnjizaraValidation.js";
+import Confirm from "./Confirm.jsx";
 
-
-function KnjizaraEditCard({knjizara, setEditable}) {
+function KnjizaraEditCard({knjizara, setEditable, setKnjizara}) {
     const [knjige, setKnjige] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [editKnjiga, setEditKnjiga] = useState(false);
+    const [outputMessage, setOutputMessage] = useState("");
     const id = knjizara.id;
 
     useEffect(() => {
@@ -62,6 +62,30 @@ function KnjizaraEditCard({knjizara, setEditable}) {
         setEditable(prev => !prev);
     }
 
+    const handleSubmit = () => {
+        // console.log(knjizara);
+        const output = knjizaraValidation(knjizara);
+        setOutputMessage(output);
+    }
+
+    const [confirmOpen, setConfirmOpen] = useState(false);
+    const [selectedKnjiga, setSelectedKnjiga] = useState(null);
+
+
+    const handleConfirm = () => {
+        setConfirmOpen(false);
+    };
+
+    const handleCancel = () => {
+        setSelectedKnjiga(null);
+        setConfirmOpen(false);
+    };
+
+    const handleDeleteUser = (user) => {
+        setSelectedKnjiga((prev) => ({ ...prev, ...user}));
+        setConfirmOpen(true);
+    }
+
     return (
         <div className="fixed inset-0 bg-gray-900/80 flex justify-center pt-10 pb-10 overflow-y-auto ">
             <div className="bg-white px-5 pb-3 rounded-lg w-11/12 max-w-md overflow-y-auto h-auto self-start">
@@ -75,15 +99,15 @@ function KnjizaraEditCard({knjizara, setEditable}) {
                     </button>
                 </div>
                 {/* Form fields */}
-                <label htmlFor="ime" className="text-gray-700 font-semibold">Ime</label>
+                <label htmlFor="ime" className="text-gray-700 font-semibold">Naziv</label>
                 <input
                     className="w-full border p-2 mb-2 rounded"
                     placeholder="Naziv"
                     name="ime"
                     value={knjizara.naziv}
-                    // onChange={(e) =>
-                    //     setEditingKnjizara({ ...editingKnjizara, naziv: e.target.value })
-                    // }
+                    onChange={(e) =>
+                        setKnjizara((prev) => ({ ...prev, naziv: e.target.value }))
+                    }
                 />
                 <label htmlFor="email" className="text-gray-700 font-semibold">Email</label>
                 <input
@@ -91,9 +115,9 @@ function KnjizaraEditCard({knjizara, setEditable}) {
                     placeholder="Email"
                     name="email"
                     value={knjizara.email}
-                    // onChange={(e) =>
-                    //     setEditingKnjizara({ ...editingKnjizara, kontaktTelefon: e.target.value })
-                    // }
+                    onChange={(e) =>
+                        setKnjizara((prev) => ({ ...prev, email: e.target.value }))
+                    }
                 />
                 <label htmlFor="adresa" className="text-gray-700 font-semibold">Adresa</label>
                 <input
@@ -101,9 +125,9 @@ function KnjizaraEditCard({knjizara, setEditable}) {
                     placeholder="Adresa"
                     name="adresa"
                     value={knjizara.adresa}
-                    // onChange={(e) =>
-                    //     setEditingKnjizara({ ...editingKnjizara, adresa: e.target.value })
-                    // }
+                    onChange={(e) =>
+                        setKnjizara((prev) => ({ ...prev, adresa: e.target.value }))
+                    }
                 />
                 <label htmlFor="godinaOsnovanja" className="text-gray-700 font-semibold">Godina osnivanja</label>
                 <input
@@ -111,25 +135,36 @@ function KnjizaraEditCard({knjizara, setEditable}) {
                     placeholder="Godina osnivanja"
                     value={knjizara.godinaOsnivanja}
                     name="godinaOsnivanja"
-                    // onChange={(e) =>
-                    //     setEditingKnjizara({ ...editingKnjizara, godinaOsnivanja: e.target.value })
-                    // }
+                    onChange={(e) =>
+                        setKnjizara((prev) => ({ ...prev, godinaOsnivanja: e.target.value }))
+                    }
                 />
 
                 {/* Upload button */}
-                <label
-                    htmlFor="logoUpload"
-                    className="cursor-pointer bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600"
-                >
-                    Upload New Logo
-                </label>
-                <input
-                    id="logoUpload"
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    // onChange={handleLogoChange}
-                />
+                {outputMessage !== "" && <p className="text-grey-600 text-center py-2">{outputMessage}</p>}
+                <div className="flex justify-between py-2">
+                    <label
+                        htmlFor="logoUpload"
+                        className="cursor-pointer bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600"
+                    >
+                        Postavi novi logo
+                    </label>
+                    <input
+                        id="logoUpload"
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={(e) =>
+                            setKnjizara((prev) => ({ ...prev, logo: e.target.value }))
+                        }
+                    />
+                    <button
+                        className="border py-1 px-2 rounded-lg"
+                        onClick={() => handleSubmit()}>
+                        Submit
+                    </button>
+                </div>
+
                 <div className="mt-3">
                     {knjige.map(knjiga => (
                         <div key={knjiga.id} className="">
@@ -138,8 +173,9 @@ function KnjizaraEditCard({knjizara, setEditable}) {
                                         className="flex-wrap flex flex-col justify-center">"{knjiga.naziv}" - {knjiga.autor}</span>
                                 <div className="flex flex-col justify-center">
                                     <button
-                                        className="max-h-[30px] mt-2.5 mb-2.5 bg-red-500 text-white px-3 py-1 text-sm rounded hover:bg-red-600">
-                                        Delete
+                                        className="max-h-[30px] mt-2.5 mb-2.5 bg-red-500 text-white px-3 py-1 text-sm rounded hover:bg-red-600"
+                                        onClick={() => handleDeleteUser(knjiga)}>
+                                        Izbrisi
                                     </button>
                                 </div>
                             </div>
@@ -149,6 +185,13 @@ function KnjizaraEditCard({knjizara, setEditable}) {
                     ))}
                 </div>
             </div>
+            <Confirm
+                isOpen={confirmOpen}
+                title="Potvrda brisanja"
+                message={`Da li ste sigurni da želite da obrišete knjigu ${selectedKnjiga == null ? "" : selectedKnjiga.naziv}`}
+                onConfirm={handleConfirm}
+                onCancel={handleCancel}
+            />
         </div>
     )
 }

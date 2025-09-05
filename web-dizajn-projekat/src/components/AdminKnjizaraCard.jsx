@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {doc, getDoc} from "firebase/firestore";
 import {db} from "../firebaseConfig.js";
+import Confirm from "./Confirm.jsx";
 
 
 function AdminKnjizaraCard({knjizare, setKnjizara, setEditable, setIsKnjigaEditable}) {
@@ -20,10 +21,23 @@ function AdminKnjizaraCard({knjizare, setKnjizara, setEditable, setIsKnjigaEdita
         setEditable(prev => (!prev));
     };
 
-    // Delete Knjizara
-    const handleDelete = async (id) => {
+    const [confirmOpen, setConfirmOpen] = useState(false);
+    const [selectedKnjizara, setSelectedKnjizara] = useState(null);
 
+
+    const handleConfirm = () => {
+        setConfirmOpen(false);
     };
+
+    const handleCancel = () => {
+        setSelectedKnjizara(null);
+        setConfirmOpen(false);
+    };
+
+    const handleDeleteKnjizara = (knjizara) => {
+        setSelectedKnjizara((prev) => ({ ...prev, ...knjizara}));
+        setConfirmOpen(true);
+    }
 
     return (
         <div className="p-6 ">
@@ -52,13 +66,13 @@ function AdminKnjizaraCard({knjizare, setKnjizara, setEditable, setIsKnjigaEdita
                                 className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 md:max-w-[120px]"
                                 onClick={() => handleEdit(k)}
                             >
-                                Edit
+                                Izmeni
                             </button>
                             <button
                                 className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 md:max-w-[120px]"
-                                // onClick={}
+                                onClick={() => handleDeleteKnjizara(k)}
                             >
-                                Delete
+                                Izbrisi
                             </button>
                             <button
                                 className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 md:max-w-[120px]"
@@ -70,6 +84,14 @@ function AdminKnjizaraCard({knjizare, setKnjizara, setEditable, setIsKnjigaEdita
                     </div>
                 </div>
             ))}
+
+            <Confirm
+                isOpen={confirmOpen}
+                title="Potvrda brisanja"
+                message={`Da li ste sigurni da želite da obrišete knjizaru ${selectedKnjizara == null ? "" : selectedKnjizara.naziv}`}
+                onConfirm={handleConfirm}
+                onCancel={handleCancel}
+            />
         </div>
     );
 }

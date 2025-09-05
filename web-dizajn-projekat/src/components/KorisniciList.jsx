@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
 import { db } from "../firebaseConfig.js";
 import { useNavigate } from "react-router-dom";
+import Confirm from "./Confirm.jsx";
 
 function KorisniciList({isEditable, setIsEditable, setEditAccount}) {
     const [users, setUsers] = useState([]);
@@ -15,12 +16,23 @@ function KorisniciList({isEditable, setIsEditable, setEditAccount}) {
         fetchUsers();
     }, []);
 
-    const handleDelete = async (id) => {
-        if (window.confirm("Da li ste sigurni da želite da obrišete korisnika?")) {
-            //await deleteDoc(doc(db, "users", id));
-            //setUsers(users.filter(user => user.id !== id));
-        }
+    const [confirmOpen, setConfirmOpen] = useState(false);
+    const [selectedUser, setSelectedUser] = useState(null);
+
+
+    const handleConfirm = () => {
+        setConfirmOpen(false);
     };
+
+    const handleCancel = () => {
+        setSelectedUser(null);
+        setConfirmOpen(false);
+    };
+
+    const handleDeleteUser = (user) => {
+        setSelectedUser((prev) => ({ ...prev, ...user}));
+        setConfirmOpen(true);
+    }
 
     return (
         <div className="p-6">
@@ -70,7 +82,7 @@ function KorisniciList({isEditable, setIsEditable, setEditAccount}) {
                                     </button>
                                     <button
                                         className="bg-red-500 text-white px-4 py-1.5 rounded-md hover:bg-red-600 transition"
-                                        onClick={() => handleDelete(user.id)}
+                                        onClick={() => handleDeleteUser(user)}
                                     >
                                         Obriši
                                     </button>
@@ -81,6 +93,13 @@ function KorisniciList({isEditable, setIsEditable, setEditAccount}) {
                     </tbody>
                 </table>
             </div>
+            <Confirm
+                isOpen={confirmOpen}
+                title="Potvrda brisanja"
+                message={`Da li ste sigurni da želite da obrišete korisnika ${selectedUser == null ? "" : selectedUser.ime}`}
+                onConfirm={handleConfirm}
+                onCancel={handleCancel}
+            />
         </div>
     );
 }

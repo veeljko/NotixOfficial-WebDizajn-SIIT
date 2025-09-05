@@ -7,16 +7,16 @@ const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const location = useLocation();
     const navLinks = [
-        { name: "Home", href: "/" },
-        { name: "Login/Register", href: location.pathname },
-        { name: "Accounts", href: "/accounts" },
+        { name: "Pocetna", href: "/" },
+        { name: "Prijava", href: location.pathname },
+        { name: "Admin Nalozi", href: "/accounts" },
         { name: "Admin Knjizara", href: "/adminknjizara" },
     ];
 
     const [isPopupOpen, setIsPopupOpen] = useState(false);
 
     return (
-        <nav className="bg-white shadow-md w-full pb-2 pt-2">
+        <nav className="bg-white shadow-md w-full pb-2 pt-2 ">
             <div className="container mx-auto px-4 flex items-center justify-between h-16">
                 {/* Logo and Name */}
                 <div className="flex items-center space-x-2">
@@ -31,7 +31,7 @@ const Navbar = () => {
                 {/* Desktop Menu */}
                 <div className="hidden md:flex space-x-8">
                     {navLinks.map((link) => (
-                        (link.name === "Login/Register" ?
+                        (link.name === "Prijava" ?
                             <Link
                                 key={link.name}
                                 to={link.href}
@@ -86,7 +86,7 @@ const Navbar = () => {
             {isOpen && (
                 <div className="md:hidden bg-white shadow-md flex flex-col items-end pr-5">
                     {navLinks.map((link) => (
-                        (link.name === "Login/Register" ?
+                        (link.name === "Prijava" ?
                                 <Link
                                     key={link.name}
                                     to={link.href}

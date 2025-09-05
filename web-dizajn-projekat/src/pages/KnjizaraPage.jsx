@@ -10,6 +10,7 @@ function KnjizaraPage() {
     const [knjige, setKnjige] = useState([]);
     const [loading, setLoading] = useState(true);
 
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -61,8 +62,9 @@ function KnjizaraPage() {
     if (loading) return <p className="flex justify-center text-2xl">Loading...</p>;
 
 
-    return (
-        <KnjizaraDetailsCard knjizara={knjizara} knjige = {knjige}/>
+    return (<>
+            <KnjizaraDetailsCard knjizara={knjizara} knjige = {knjige}/>
+        </>
     );
 }
 

@@ -1,7 +1,27 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 
-export default function ImageUploader() {
+function ImageUploader({setNewKnjiga, flag}) {
     const [images, setImages] = useState([]);
+
+
+    function update(images) {
+        setNewKnjiga(prev => ({
+            ...prev,
+            slike: images
+        }));
+    }
+
+    useEffect(() => {
+        setNewKnjiga(prev => ({
+            ...prev,
+            slike: images,
+        }));
+    }, [images]);
+
+    useEffect(() => {
+        setImages([]);
+    }, [flag])
+
 
     const handleUpload = (e) => {
         const file = e.target.files?.[0];
@@ -9,7 +29,6 @@ export default function ImageUploader() {
 
         const url = URL.createObjectURL(file);
         setImages((prev) => [...prev, { id: crypto.randomUUID?.() ?? String(Date.now() + Math.random()), url, file }]);
-
         // allow re-selecting the same file later
         e.target.value = "";
     };
@@ -45,19 +64,16 @@ export default function ImageUploader() {
                 ))}
             </div>
 
-            <div className="flex justify-around pt-5">
-                <label className=" flex  border-2 rounded-lg p-2 items-center cursor-pointer hover:bg-gray-100">
+            <div className="flex justify-around pt-5 ">
+                <label className="w-full flex justify-center border-2 rounded-lg p-2 items-center cursor-pointer hover:bg-gray-100">
                     <span className="text-gray-500 text-sm text-center">Dodaj sliku</span>
-                    <input type="file" accept="image/*" className="hidden" onChange={handleUpload} />
+                    <input type="file" accept="image/*" className="hidden" onChange={handleUpload}/>
                 </label>
-                <button
-                    className="bg-gray-300 p-2 rounded-lg border-1 hover:bg-gray-400"
-                >
-                    Dodaj knjigu
-                </button>
             </div>
 
 
         </div>
     );
 }
+
+export default ImageUploader;

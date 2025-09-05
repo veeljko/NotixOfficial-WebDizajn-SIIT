@@ -1,21 +1,14 @@
-
+import {registerValidation} from "../validation/RegisterValidation.js";
+import {useState} from "react";
 
 function KorisnikEdit({setIsEditable, editAccount, setEditAccount}) {
-    // const [user, setUser] = useState({ name: "", email: "", role: "", phone: "" });
+    const [outputMessage, setOutputMessage] = useState("");
 
-    // useEffect(() => {
-    //     const fetchUser = async () => {
-    //         const userRef = doc(db, "users", id);
-    //         const userSnap = await getDoc(userRef);
-    //         if (userSnap.exists()) {
-    //             setUser(userSnap.data());
-    //         }
-    //     };
-    //     fetchUser();
-    // }, [id]);
-
-    const handleChange = () => {
-
+    const handleSave = () => {
+        const temp = editAccount;
+        temp.passwordPotvrda = editAccount.password;
+        const output = registerValidation(temp);
+        (output === "Uspesna registracija" ? setOutputMessage("Podaci sacuvani!") : setOutputMessage(output));
     };
 
     const handleChangeIme = (e) => {
@@ -181,8 +174,11 @@ function KorisnikEdit({setIsEditable, editAccount, setEditAccount}) {
                         onChange={handleChangeLozinka}
                         placeholder="Lozinka"
                     />
+
+                    {outputMessage !== "" && <p className="text-gray-700 text-center pb-1">{outputMessage}</p>}
+
                     <button
-                        // onClick={handleSave}
+                        onClick={handleSave}
                         className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
                     >
                         Sačuvaj
