@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
+import {collection, onSnapshot, deleteDoc, doc} from "firebase/firestore";
 import { db } from "../firebaseConfig.js";
 import { useNavigate } from "react-router-dom";
 import Confirm from "./Confirm.jsx";
@@ -8,20 +8,33 @@ function KorisniciList({isEditable, setIsEditable, setEditAccount}) {
     const [users, setUsers] = useState([]);
 
     useEffect(() => {
-        const fetchUsers = async () => {
-            const querySnapshot = await getDocs(collection(db, "korisnici"));
-            const usersList = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            setUsers(usersList);
-        };
-        fetchUsers();
+        const korisniciRef = collection(db, "korisnici");
+
+        // real-time listener
+        const unsubscribe = onSnapshot(korisniciRef, (snapshot) => {
+            setUsers(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+        });
+
+        // cleanup listener on unmount
+        return () => unsubscribe();
     }, []);
+
 
     const [confirmOpen, setConfirmOpen] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
 
+    async function deleteUser(userId) {
+        try {
+            await deleteDoc(doc(db, "korisnici", userId));
+            console.log("User deleted successfully:", userId);
+        } catch (error) {
+            console.error("Error deleting user:", error);
+        }
+    }
 
     const handleConfirm = () => {
         setConfirmOpen(false);
+        deleteUser(selectedUser.id);
     };
 
     const handleCancel = () => {

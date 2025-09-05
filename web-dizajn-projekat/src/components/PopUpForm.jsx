@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import {registerValidation} from "../validation/RegisterValidation.js";
 import {loginValidation} from "../validation/LoginValidation.js";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { db } from "../firebaseConfig.js";
 
 const Popup = ({ isOpen, onClose }) => {
     if (!isOpen) return null;
@@ -51,13 +53,33 @@ const Popup = ({ isOpen, onClose }) => {
         setNewUser(prev => ({ ...prev, zanimanje: e.target.value }));
     }
 
-
+    async function addNewUser() {
+        try {
+            await addDoc(collection(db, "korisnici"), {
+                adresa: newUser.adresa,
+                datumRodjenja: newUser.date,
+                email: newUser.email,
+                ime: newUser.ime,
+                korisnickoIme: newUser.korisnickoIme,
+                lozinka: newUser.password,
+                prezime: newUser.prezime,
+                telefon: newUser.telefon,
+                zanimanje: newUser.zanimanje
+            });
+            console.log("User added successfully!");
+        } catch (error) {
+            console.error("Error adding user:", error);
+        }
+    }
 
     function handleSubmit(){
         // console.log(newUser);
         const output = isRegister ? registerValidation(newUser) : loginValidation(newUser);
         // console.log(output);
         setOutputMessage(output);
+        if (output === "Uspesna registracija"){
+            addNewUser();
+        }
     }
 
 

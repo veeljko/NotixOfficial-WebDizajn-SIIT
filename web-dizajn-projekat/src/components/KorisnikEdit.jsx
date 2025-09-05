@@ -1,14 +1,42 @@
 import {registerValidation} from "../validation/RegisterValidation.js";
 import {useState} from "react";
+import {doc, updateDoc} from "firebase/firestore";
+import {db} from "../firebaseConfig.js";
 
 function KorisnikEdit({setIsEditable, editAccount, setEditAccount}) {
     const [outputMessage, setOutputMessage] = useState("");
+
+    async function updateKorisnik(id, updatedFields) {
+        try {
+            const korisnikRef = doc(db, "korisnici", id);
+
+            await updateDoc(korisnikRef, updatedFields);
+
+            console.log("Korisnik updated successfully!");
+        } catch (error) {
+            console.error("Error updating korisnik:", error);
+        }
+    }
 
     const handleSave = () => {
         const temp = editAccount;
         temp.passwordPotvrda = editAccount.password;
         const output = registerValidation(temp);
-        (output === "Uspesna registracija" ? setOutputMessage("Podaci sacuvani!") : setOutputMessage(output));
+        if (output === "Uspesna registracija") {
+            setOutputMessage("Podaci sacuvani!")
+            updateKorisnik(editAccount.id, {
+                adresa: editAccount.adresa,
+                datumRodjenja: editAccount.datumRodjenja,
+                email: editAccount.email,
+                lozinka: editAccount.lozinka,
+                korisnickoIme: editAccount.korisnickoIme,
+                ime: editAccount.ime,
+                prezime: editAccount.prezime,
+                telefon: editAccount.telefon,
+                zanimanje: editAccount.zanimanje
+            });
+        }
+        else setOutputMessage(output);
     };
 
     const handleChangeIme = (e) => {
@@ -17,56 +45,48 @@ function KorisnikEdit({setIsEditable, editAccount, setEditAccount}) {
             ime: e.target.value
         }))
     };
-
     const handleChangePrezime = (e) => {
         setEditAccount((prev) => ({
             ...prev,
             prezime: e.target.value
         }))
     };
-
     const handleChangeKorisnickoIme = (e) => {
         setEditAccount((prev) => ({
             ...prev,
             korisnickoIme: e.target.value
         }))
     };
-
     const handleChangeAdresa = (e) => {
         setEditAccount((prev) => ({
             ...prev,
             adresa: e.target.value
         }))
     };
-
     const handleChangeDatumRodjenja = (e) => {
         setEditAccount((prev) => ({
             ...prev,
             datumRodjenja: e.target.value
         }))
     };
-
     const handleChangeEmail = (e) => {
         setEditAccount((prev) => ({
             ...prev,
             email: e.target.value
         }))
     };
-
     const handleChangeTelefon = (e) => {
         setEditAccount((prev) => ({
             ...prev,
             telefon: e.target.value
         }))
     };
-
     const handleChangeZanimanje = (e) => {
         setEditAccount((prev) => ({
             ...prev,
             zanimanje: e.target.value
         }))
     };
-
     const handleChangeLozinka = (e) => {
         setEditAccount((prev) => ({
             ...prev,
