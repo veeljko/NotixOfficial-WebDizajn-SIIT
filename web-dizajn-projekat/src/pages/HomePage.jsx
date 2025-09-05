@@ -1,6 +1,6 @@
 import KnjizaraCard from "../components/KnjizaraCard.jsx";
 import {useEffect, useState} from "react";
-import { collection, getDocs } from "firebase/firestore";
+import {collection, getDocs, onSnapshot} from "firebase/firestore";
 import { db } from "../firebaseConfig.js";
 
 function HomePage() {
@@ -9,14 +9,17 @@ function HomePage() {
     const knjizareRef = collection(db, "knjizare");
 
     // Fetch all Knjizare
-    const loadKnjizare = async () => {
-        const snapshot = await getDocs(knjizareRef);
-        setKnjizare(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-    };
-
     useEffect(() => {
-        loadKnjizare();
+        // Real-time listener for knjizare collection
+        const unsubscribe = onSnapshot(knjizareRef, (snapshot) => {
+            const lista = snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+            setKnjizare(lista);
+        });
+
+        // Cleanup listener on unmount
+        return () => unsubscribe();
     }, []);
+
 
     return (<div className="grid grid-cols-[repeat(auto-fit,minmax(250px,2fr))] gap-8 p-8">
             {knjizare.map(knjizara => (
