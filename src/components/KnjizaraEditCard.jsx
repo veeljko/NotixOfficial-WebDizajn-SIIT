@@ -60,6 +60,8 @@ function KnjizaraEditCard({knjizara, setEditable, setKnjizara}) {
             return () => unsubscribeKnjige();
         });
 
+
+
         // Cleanup Knjizara listener
         return () => unsubscribe();
     }, [id]);
@@ -93,6 +95,7 @@ function KnjizaraEditCard({knjizara, setEditable, setKnjizara}) {
                 logo: knjizara.logo,
                 naziv: knjizara.naziv
             })
+
         }
     }
 
