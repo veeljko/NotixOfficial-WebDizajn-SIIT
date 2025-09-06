@@ -28,12 +28,10 @@ export default function AdminKnjizarePage() {
     useEffect(() => {
         const knjizareRef = collection(db, "knjizare");
 
-        // Subscribe to real-time updates
         const unsubscribe = onSnapshot(knjizareRef, (snapshot) => {
             setKnjizare(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
         });
 
-        // Cleanup listener when component unmounts
         return () => unsubscribe();
     }, []);
 

@@ -13,10 +13,10 @@ function KnjizaraEditCard({knjizara, setEditable, setKnjizara}) {
     useEffect(() => {
         if (!id) return;
 
-        // Reference to the Knjizara document
+        
         const knjizaraRef = doc(db, "knjizare", id);
 
-        // Real-time listener for the Knjizara document
+        
         const unsubscribe = onSnapshot(knjizaraRef, async (knjizaraSnap) => {
             if (!knjizaraSnap.exists()) {
                 console.log("Knjizara not found");
@@ -35,10 +35,10 @@ function KnjizaraEditCard({knjizara, setEditable, setKnjizara}) {
                 return;
             }
 
-            // Reference to the Knjige document
+            
             const knjigeRef = doc(db, "knjige", knjigeField);
 
-            // Real-time listener for Knjige
+            
             const unsubscribeKnjige = onSnapshot(knjigeRef, (knjigeSnap) => {
                 if (!knjigeSnap.exists()) {
                     console.log("Knjige not found");
@@ -56,13 +56,13 @@ function KnjizaraEditCard({knjizara, setEditable, setKnjizara}) {
                 setLoading(false);
             });
 
-            // Cleanup Knjige listener when Knjizara changes
+            
             return () => unsubscribeKnjige();
         });
 
 
 
-        // Cleanup Knjizara listener
+        
         return () => unsubscribe();
     }, [id]);
 
@@ -82,7 +82,7 @@ function KnjizaraEditCard({knjizara, setEditable, setKnjizara}) {
     }
 
     const handleSubmit = () => {
-        // console.log(knjizara);
+        
         const output = knjizaraValidation(knjizara);
         setOutputMessage(output);
         if (output === "Podaci sacuvani!"){
@@ -107,7 +107,7 @@ function KnjizaraEditCard({knjizara, setEditable, setKnjizara}) {
             const booksRef = doc(db, "knjige", booksDocId);
 
             await updateDoc(booksRef, {
-                [bookId]: deleteField() // removes this book from the document
+                [bookId]: deleteField() 
             });
 
             console.log("Book removed:", bookId);

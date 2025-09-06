@@ -99,12 +99,12 @@ function KorisnikEdit({setIsEditable, editAccount, setEditAccount}) {
         setIsEditable(false);
     }
 
-    // const handleSave = async () => {
-    //     const userRef = doc(db, "users", id);
-    //     await updateDoc(userRef, user);
-    //     alert("Podaci uspešno izmenjeni!");
-    //     navigate("/admin/users");
-    // };
+    
+    
+    
+    
+    
+    
 
     return (
         <div className="p-4 sm:p-10 md:p-20 fixed inset-0 flex items-center justify-center bg-gray-900/80 z-20">

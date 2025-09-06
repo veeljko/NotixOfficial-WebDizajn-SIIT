@@ -8,12 +8,12 @@ import KnjizaraEditKnjige from "./KnjizaraEditKnjige.jsx";
 function AdminKnjizaraCard({knjizare, knjizara, setKnjizara, setEditable, setIsKnjigaEditable, isKnjigaEditable}) {
     const id = knjizare.id;
 
-    // Edit Knjizara
+    
     const handleEdit = (k) => {
         setKnjizara((prev) => ({
             ...prev,
-            ...k, // overwrite with new values
-            id: k.id, // ensure id is correct
+            ...k, 
+            id: k.id, 
         }));
         setEditable(prev => (!prev));
     };
@@ -31,7 +31,7 @@ function AdminKnjizaraCard({knjizare, knjizara, setKnjizara, setEditable, setIsK
 
     const handleConfirm = () => {
         setConfirmOpen(false);
-        //brisanje knjizare
+        
         deleteKnjizara(knjizara.id);
     };
 

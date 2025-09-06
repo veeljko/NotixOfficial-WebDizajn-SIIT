@@ -10,12 +10,12 @@ function KorisniciList({isEditable, setIsEditable, setEditAccount}) {
     useEffect(() => {
         const korisniciRef = collection(db, "korisnici");
 
-        // real-time listener
+        
         const unsubscribe = onSnapshot(korisniciRef, (snapshot) => {
             setUsers(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
         });
 
-        // cleanup listener on unmount
+        
         return () => unsubscribe();
     }, []);
 

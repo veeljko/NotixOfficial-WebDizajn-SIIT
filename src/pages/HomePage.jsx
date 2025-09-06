@@ -9,15 +9,12 @@ function HomePage() {
 
     const knjizareRef = collection(db, "knjizare");
 
-    // Fetch all Knjizare
     useEffect(() => {
-        // Real-time listener for knjizare collection
         const unsubscribe = onSnapshot(knjizareRef, (snapshot) => {
             const lista = snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
             setKnjizare(lista);
         });
 
-        // Cleanup listener on unmount
         return () => unsubscribe();
     }, []);
 

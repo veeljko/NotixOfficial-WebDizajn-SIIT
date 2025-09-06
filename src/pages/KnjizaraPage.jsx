@@ -16,10 +16,8 @@ function KnjizaraPage() {
     useEffect(() => {
         if (!id) return;
 
-        // Reference to the Knjizara document
         const knjizaraRef = doc(db, "knjizare", id);
 
-        // Listen to Knjizara in real-time
         const unsubscribeKnjizara = onSnapshot(knjizaraRef, (knjizaraSnap) => {
             if (!knjizaraSnap.exists()) {
                 console.log("Knjizara not found");
@@ -40,10 +38,8 @@ function KnjizaraPage() {
                 return;
             }
 
-            // Reference to the Knjige document
             const knjigeRef = doc(db, "knjige", knjigeField);
 
-            // Listen to Knjige in real-time
             const unsubscribeKnjige = onSnapshot(knjigeRef, (knjigeSnap) => {
                 if (!knjigeSnap.exists()) {
                     console.log("Knjige not found");
@@ -61,11 +57,9 @@ function KnjizaraPage() {
                 setLoading(false);
             });
 
-            // Cleanup knjige listener when Knjizara updates
             return () => unsubscribeKnjige();
         });
 
-        // Cleanup knjizara listener
         return () => unsubscribeKnjizara();
     }, [id]);
 
@@ -83,7 +77,6 @@ function KnjizaraPage() {
             .toLowerCase()
             .includes(search.autor.toLowerCase());
 
-        // морају СВИ услови да буду испуњени истовремено
         return nazivMatch && zanrMatch && autorMatch;
     });
 

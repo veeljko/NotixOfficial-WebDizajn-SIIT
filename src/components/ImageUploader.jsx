@@ -29,7 +29,7 @@ function ImageUploader({setNewKnjiga, flag}) {
 
         const url = URL.createObjectURL(file);
         setImages((prev) => [...prev, { id: crypto.randomUUID?.() ?? String(Date.now() + Math.random()), url, file }]);
-        // allow re-selecting the same file later
+        
         e.target.value = "";
     };
 

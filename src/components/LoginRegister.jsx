@@ -73,9 +73,9 @@ const Popup = ({ isOpen, onClose }) => {
     }
 
     function handleSubmit(){
-        // console.log(newUser);
+        
         const output = isRegister ? registerValidation(newUser) : loginValidation(newUser);
-        // console.log(output);
+        
         setOutputMessage(output);
         if (output === "Uspesna registracija"){
             addNewUser();

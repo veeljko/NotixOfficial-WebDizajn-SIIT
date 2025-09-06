@@ -56,7 +56,7 @@ const Navbar = () => {
                 <div className="md:hidden">
                     <button onClick={() => setIsOpen(!isOpen)} className="text-gray-700 focus:outline-none">
                         {isOpen ? (
-                            // Close Icon (X)
+                            
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 className="h-6 w-6"
@@ -67,7 +67,7 @@ const Navbar = () => {
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
                             </svg>
                         ) : (
-                            // Hamburger Icon
+                            
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 className="h-6 w-6"
