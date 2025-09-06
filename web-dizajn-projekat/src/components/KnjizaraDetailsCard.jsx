@@ -1,11 +1,13 @@
 import {useNavigate} from "react-router-dom";
+import KnjigePretraga from "./KnjigePretraga.jsx";
 
 
-function KnjizaraDetailsCard({knjizara, knjige}){
+function KnjizaraDetailsCard({knjizara, knjige, search, setSearch}) {
     const navigate = useNavigate();
 
     return (<div className="p-6">
             <div className="bg-white shadow-lg rounded-lg p-6 max-w-xl mx-auto">
+
                 <img src={knjizara.logo} alt={knjizara.name} className="w-full h-60 object-cover rounded" />
                 <h1 className="text-3xl font-bold mt-4">{knjizara.naziv}</h1>
                 <div className="flex flex-col  pt-1">
@@ -14,7 +16,9 @@ function KnjizaraDetailsCard({knjizara, knjige}){
                         <p className="text-gray-600">Email: {knjizara.email}</p>
                         <p className="text-gray-600">Telefon: {knjizara.kontaktTelefon}</p>
                 </div>
+
                 <h2 className="text-xl font-semibold mt-6">Knjige:</h2>
+                <KnjigePretraga search={search} setSearch={setSearch}/>
                 {knjige.map(knjiga => (
                     <div key={knjiga.id}>
                         <div className="flex justify-between">

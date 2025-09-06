@@ -3,12 +3,14 @@ import { useParams} from "react-router-dom";
 import {doc, getDoc, onSnapshot} from "firebase/firestore";
 import { db } from "../firebaseConfig.js";
 import KnjizaraDetailsCard from "../components/KnjizaraDetailsCard.jsx";
+import KnjigePretraga from "../components/KnjigePretraga.jsx";
 
 function KnjizaraPage() {
     const id = useParams().id;
     const [knjizara, setKnjizara] = useState(null);
     const [knjige, setKnjige] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [search, setSearch] = useState({ naziv: "", zanr: "", autor: "" });
 
 
     useEffect(() => {
@@ -70,9 +72,23 @@ function KnjizaraPage() {
 
     if (loading) return <p className="flex justify-center text-2xl">Ucitavanje...</p>;
 
+    const filteredKnjige = knjige.filter((knjiga) => {
+        const nazivMatch = knjiga.naziv
+            .toLowerCase()
+            .includes(search.naziv.toLowerCase());
+        const zanrMatch = knjiga.zanr
+            .toLowerCase()
+            .includes(search.zanr.toLowerCase());
+        const autorMatch = knjiga.autor
+            .toLowerCase()
+            .includes(search.autor.toLowerCase());
+
+        // морају СВИ услови да буду испуњени истовремено
+        return nazivMatch && zanrMatch && autorMatch;
+    });
 
     return (<>
-            <KnjizaraDetailsCard knjizara={knjizara} knjige = {knjige}/>
+            <KnjizaraDetailsCard knjizara={knjizara} knjige = {filteredKnjige} search={search} setSearch={setSearch}/>
         </>
     );
 }
