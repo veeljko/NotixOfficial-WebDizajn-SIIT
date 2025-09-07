@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import logo from "../assets/logo.svg";
 import {Link, useLocation} from "react-router-dom";
 import Popup from "./LoginRegister.jsx";
+import Confirm from "./Confirm.jsx";
 
 const Navbar = () => {
     const [user, setUser] = useState(null);
@@ -9,10 +10,22 @@ const Navbar = () => {
     const location = useLocation();
     const navLinks = [
         { name: "Pocetna", href: "/" },
-        { name: user == null ? "Prijava" : user.korisnickoIme, href: location.pathname },
+        { name: "Prijava", href: location.pathname },
         { name: "Admin Nalozi", href: "/accounts" },
         { name: "Admin Knjizara", href: "/adminknjizara" },
     ];
+
+    const [confirmOpen, setConfirmOpen] = useState(false);
+    const [selectedUser, setSelectedUser] = useState(null);
+
+    const handleConfirm = () => {
+        setConfirmOpen(false);
+        window.location.reload();
+    };
+
+    const handleCancel = () => {
+        setConfirmOpen(false);
+    };
 
     const [isPopupOpen, setIsPopupOpen] = useState(false);
 
@@ -38,7 +51,14 @@ const Navbar = () => {
                                 to={link.href}
                                 className="text-gray-700 hover:text-blue-600 font-medium"
                             >
-                                <button onClick={() => setIsPopupOpen(true)}> {link.name}</button>
+                                {user !== null ?
+                                    <button className="text-shadow-lg font-medium"
+                                    onClick={() => setConfirmOpen(true)}>
+                                        {user.korisnickoIme}
+                                    </button>
+                                    :
+                                    <button onClick={() => setIsPopupOpen(true)}> {link.name}</button>
+                                }
                             </Link>
                         :
                             <Link
@@ -93,6 +113,7 @@ const Navbar = () => {
                                     to={link.href}
                                     className="text-gray-700 hover:text-blue-600 font-medium"
                                 >
+
                                     <button onClick={() => setIsPopupOpen(true)}> {link.name}</button>
                                 </Link>
                                 :
@@ -108,6 +129,13 @@ const Navbar = () => {
                 </div>
             )}
             <Popup isOpen={isPopupOpen} setUser={setUser} onClose={setIsPopupOpen} />
+            <Confirm
+                isOpen={confirmOpen}
+                title="Potvrda odjave"
+                message={`Da li ste sigurni da želite da se odjavite ${user == null ? "" : user.ime}`}
+                onConfirm={handleConfirm}
+                onCancel={handleCancel}
+            />
         </nav>
     );
 };
