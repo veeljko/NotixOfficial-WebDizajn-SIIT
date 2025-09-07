@@ -113,8 +113,14 @@ const Navbar = () => {
                                     to={link.href}
                                     className="text-gray-700 hover:text-blue-600 font-medium"
                                 >
-
-                                    <button onClick={() => setIsPopupOpen(true)}> {link.name}</button>
+                                    {user !== null ?
+                                        <button className="text-shadow-lg font-medium"
+                                                onClick={() => setConfirmOpen(true)}>
+                                            {user.korisnickoIme}
+                                        </button>
+                                        :
+                                        <button onClick={() => setIsPopupOpen(true)}> {link.name}</button>
+                                    }
                                 </Link>
                                 :
                                 <Link
