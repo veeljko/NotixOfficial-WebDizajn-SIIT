@@ -3,7 +3,7 @@ import leftArrow from "../assets/left-arrow.svg";
 import rightArrow from "../assets/right-arrow.svg";
 
 function ImageSlideShow({ images }) {
-    if (images === null) images = ["https:
+    if (images === null) images = ["https:"]
     const [nextIndex, setNextIndex] = useState(0);
     const arrayLength = images.length;
 

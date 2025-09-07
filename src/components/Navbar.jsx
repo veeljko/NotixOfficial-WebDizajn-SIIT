@@ -4,11 +4,12 @@ import {Link, useLocation} from "react-router-dom";
 import Popup from "./LoginRegister.jsx";
 
 const Navbar = () => {
+    const [user, setUser] = useState(null);
     const [isOpen, setIsOpen] = useState(false);
     const location = useLocation();
     const navLinks = [
         { name: "Pocetna", href: "/" },
-        { name: "Prijava", href: location.pathname },
+        { name: user == null ? "Prijava" : user.korisnickoIme, href: location.pathname },
         { name: "Admin Nalozi", href: "/accounts" },
         { name: "Admin Knjizara", href: "/adminknjizara" },
     ];
@@ -106,7 +107,7 @@ const Navbar = () => {
                     ))}
                 </div>
             )}
-            <Popup isOpen={isPopupOpen} onClose={() => setIsPopupOpen(false)} />
+            <Popup isOpen={isPopupOpen} setUser={setUser} onClose={setIsPopupOpen} />
         </nav>
     );
 };

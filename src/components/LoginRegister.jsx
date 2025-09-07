@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import {registerValidation} from "../validation/RegisterValidation.js";
 import {loginValidation} from "../validation/LoginValidation.js";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { collection, addDoc, query, where, getDocs } from "firebase/firestore";
 import { db } from "../firebaseConfig.js";
 
-const Popup = ({ isOpen, onClose }) => {
+const Popup = ({ isOpen, onClose, setUser }) => {
     if (!isOpen) return null;
 
     const [isRegister, setIsRegister] = useState(false);
@@ -72,15 +72,59 @@ const Popup = ({ isOpen, onClose }) => {
         }
     }
 
-    function handleSubmit(){
-        
-        const output = isRegister ? registerValidation(newUser) : loginValidation(newUser);
-        
-        setOutputMessage(output);
-        if (output === "Uspesna registracija"){
-            addNewUser();
+    async function loginUser(email, password) {
+        try {
+            const korisniciRef = collection(db, "korisnici");
+
+            // Find user with matching korisnickoIme and lozinka
+            const q = query(
+                korisniciRef,
+                where("email", "==", email),
+                where("lozinka", "==", password)
+            );
+
+            const querySnapshot = await getDocs(q);
+
+            if (!querySnapshot.empty) {
+                // Return first matched user (you can adapt if you expect multiple)
+                const doc = querySnapshot.docs[0];
+                return { id: doc.id, ...doc.data() };
+            } else {
+                return null; // user not found
+            }
+        } catch (error) {
+            console.error("Error logging in:", error);
+            return null;
         }
     }
+
+    async function handleSubmit() {
+        const output = isRegister ? registerValidation(newUser) : loginValidation(newUser);
+
+        if (isRegister) {
+            setOutputMessage(output);
+            if (output === "Uspesna registracija") {
+                addNewUser();
+            }
+        } else {
+            if (output === "Uspesno Logovanje!") {
+                const korisnik = await loginUser(newUser.email, newUser.password);
+                // console.log(korisnik);
+                // console.log(newUser.email + " " + newUser.password);
+                if (korisnik) {
+                    console.log("Login successful!", korisnik);
+                    setUser((prev) => ({...prev, ...korisnik}));
+                    onClose(false);
+
+                } else {
+                    console.log("Invalid username or password.");
+                }
+            } else {
+                setOutputMessage(output);
+            }
+        }
+    }
+
 
 
     return (

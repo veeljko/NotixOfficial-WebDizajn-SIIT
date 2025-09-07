@@ -22,7 +22,7 @@ function HomePage() {
         knjizara.naziv.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    return (<>
+    return (<div className="flex flex-col min-h-screen">
             <div className="flex justify-center mb-6 mt-5">
                 <input
                     type="text"
@@ -47,7 +47,7 @@ function HomePage() {
                     </div>
                 ))}
         </div>
-    </>)
+    </div>)
 }
 
 export default HomePage;
