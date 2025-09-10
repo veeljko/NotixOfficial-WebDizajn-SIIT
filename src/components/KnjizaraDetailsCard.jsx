@@ -5,6 +5,26 @@ import KnjigePretraga from "./KnjigePretraga.jsx";
 function KnjizaraDetailsCard({knjizara, knjige, search, setSearch}) {
     const navigate = useNavigate();
 
+    function highlightSubstring(text, highlight, color = "yellow") {
+        if (!highlight) return <span>{text}</span>;
+
+        const regex = new RegExp(`(${highlight})`, "gi");
+        const parts = text.split(regex);
+
+        return (<span>
+                {parts.map((part, index) =>
+                        regex.test(part) ? (
+                            <span key={index} style={{ backgroundColor: color }}>
+            {part}
+          </span>
+                        ) : (
+                            part
+                        )
+                )}
+            </span>
+        );
+    }
+
     return (<div className="p-6">
             <div className="bg-white shadow-lg rounded-lg p-6 max-w-xl mx-auto">
 
@@ -22,7 +42,11 @@ function KnjizaraDetailsCard({knjizara, knjige, search, setSearch}) {
                 {knjige.map(knjiga => (
                     <div key={knjiga.id}>
                         <div className="flex justify-between">
-                            <span className="basis-3/5 flex flex-col justify-end">"{knjiga.naziv}" - {knjiga.autor}</span>
+                            <span className="basis-3/5 flex flex-col justify-end">
+                                <span>
+                                  "{highlightSubstring(knjiga.naziv, search.naziv,"lightblue")}" - {highlightSubstring(knjiga.autor, search.autor, "lightblue")}
+                                </span>
+                            </span>
                             <div className="w-auto h-auto flex flex-col justify-center">
                                 <button className="my-1.5 py-1.5 px-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors"
                                 onClick={() => navigate(`/knjiga/${knjiga.id}`, {state : {knjiga}})}>
