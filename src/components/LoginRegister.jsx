@@ -131,7 +131,7 @@ const Popup = ({ isOpen, onClose, setUser }) => {
         <div className="fixed inset-0 flex items-center justify-center bg-gray-900/80 z-50 ">
             <div className="bg-white rounded-2xl shadow-lg w-11/12 max-w-md p-6 relative max-h-[90vh] overflow-y-auto">
                 <button
-                    onClick={onClose}
+                    onClick={() => onClose(false)}
                     className="absolute top-3 right-3 text-gray-500 hover:text-gray-800"
                 >
                     ✕

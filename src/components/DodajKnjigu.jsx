@@ -59,11 +59,14 @@ function DodajKnjigu({setIsKnjigaEditable, knjizara}){
         }
     }
 
+
     function handleSave(e){
         const output = knjigaValidation(newKnjiga);
         setOutputMessage(output);
         if (output === "Uspesno dodata knjiga!"){
             console.log(newKnjiga);
+
+
             addBookToBooksDoc(knjizara.knjige, {
                 autor: newKnjiga.autor,
                 brojStrana: newKnjiga.brojStrana,
@@ -72,7 +75,7 @@ function DodajKnjigu({setIsKnjigaEditable, knjizara}){
                 naziv: newKnjiga.naziv,
                 opis: newKnjiga.opis,
                 zanr: newKnjiga.zanr,
-                slike: null
+                slike: newKnjiga.slike
             })
 
 

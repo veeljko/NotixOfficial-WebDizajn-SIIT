@@ -4,17 +4,15 @@ function ImageUploader({setNewKnjiga, flag}) {
     const [images, setImages] = useState([]);
 
 
-    function update(images) {
-        setNewKnjiga(prev => ({
-            ...prev,
-            slike: images
-        }));
-    }
 
     useEffect(() => {
+        const img = [];
+        for (let i = 0; i < images.length; i++) {
+            img.push(images[i].base64);
+        }
         setNewKnjiga(prev => ({
             ...prev,
-            slike: images,
+            slike: img
         }));
     }, [images]);
 
@@ -27,18 +25,26 @@ function ImageUploader({setNewKnjiga, flag}) {
         const file = e.target.files?.[0];
         if (!file) return;
 
-        const url = URL.createObjectURL(file);
-        setImages((prev) => [...prev, { id: crypto.randomUUID?.() ?? String(Date.now() + Math.random()), url, file }]);
-        
-        e.target.value = "";
+        const reader = new FileReader();
+        reader.readAsDataURL(file); // convert to base64
+        reader.onloadend = () => {
+            const base64 = reader.result; // this is the base64 string
+
+            setImages((prev) => [
+                ...prev,
+                {
+                    id: crypto.randomUUID?.() ?? String(Date.now() + Math.random()),
+                    base64, // store the base64 string here
+                    file,   // optional: keep the original file if you still need it
+                },
+            ]);
+        };
+
+        e.target.value = ""; // reset file input
     };
 
     const handleDelete = (id) => {
-        setImages((prev) => {
-            const img = prev.find((x) => x.id === id);
-            if (img) URL.revokeObjectURL(img.url);
-            return prev.filter((x) => x.id !== id);
-        });
+        setImages((prev) => prev.filter((img) => img.id !== id));
     };
 
     return (
@@ -47,7 +53,7 @@ function ImageUploader({setNewKnjiga, flag}) {
                 {images.map((img) => (
                     <div key={img.id} className="relative">
                         <img
-                            src={img.url}
+                            src={img.base64}   // use base64 instead of url
                             alt=""
                             className="w-20 h-20 object-cover rounded-lg border"
                         />
